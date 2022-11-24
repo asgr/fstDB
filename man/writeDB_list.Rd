@@ -8,9 +8,9 @@ Write out an FST List
 Write out an \code{fstDB} or \code{data.table} / \code{data.frame} as a mini on-disk database.
 }
 \usage{
-write_fstDB(x, name = "fstDB", sub = "sub", sub_col = ".list_position",
+write_fstDB(x, name = "example_fstDB", sub = "sub", sub_col = ".list_position",
   compress = 50, uniform_encoding = TRUE, cores = 1, append = FALSE, breakby = NULL,
-  breaks = 10, trim = TRUE)
+  breaks = 10, trim = FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -18,7 +18,7 @@ write_fstDB(x, name = "fstDB", sub = "sub", sub_col = ".list_position",
 \code{fstDB}, a single \code{data.table} / \code{data.frame}, or a list with \code{data.table} / \code{data.frame} elements.
 }
   \item{name}{
-Character scalar; the name of the fstDB database. This will be the name of the directory that contains the multiple fst files making up the mini on-disk database.
+Character scalar; the name of the fstDB database. This will be the name of the directory that contains the multiple fst files making up the mini on-disk database. As a suggestion, the name should end '_fstDB' to make the intention of the directory clear (i.e. you should not add any other files inside this folder, other than the ones made by \code{write_fstDB}).
 }
   \item{sub}{
 Character scalar; file name stub for the subset files contained inside the top level fstDB database directory.
@@ -42,10 +42,10 @@ Logical; should the output be appended to an already started fstDB mini on-disk 
 Character/Integer scalar; if \option{x} is a \code{data.table} / \code{data.frame} then you can specify a target column to break the files up by.
 }
   \item{breaks}{
-Integer scalar/vector
+Integer scalar/vector; specify the number of breaks (scalar) or the vector of breaks. If a scalar then the range to use for the actual break limits is computed from the \option{breakby} column. If \option{trim} = FALSE then \option{breakby} column values below the lowest break value are assigned to the first file and \option{breakby} column values above the highest break value are assigned to the last file. Also \option{breakby} column values that are NA are assigned to last file.
 }
   \item{trim}{
-Logical; should data outside of \option{breaks} range be trimmed?
+Logical; should data rows with \option{breakby} column values outside of \option{breaks} range and \option{breakby} column values that are NA be trimmed?
 }
 }
 \details{

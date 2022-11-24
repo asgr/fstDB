@@ -25,9 +25,9 @@ read_fstDB = function(dirlist=".", filelist=NULL, pattern="^.*sub.*\\.fst$",
   }
 }
 
-write_fstDB = function(x, name='fstDB', sub='sub', sub_col='.list_position',
+write_fstDB = function(x, name='example_fstDB', sub='sub', sub_col='.list_position',
                        compress=50, uniform_encoding=TRUE, cores=1, append=FALSE,
-                       breakby=NULL, breaks=10, trim=TRUE){
+                       breakby=NULL, breaks=10, trim=FALSE){
   is_fstDB = testClass(x, 'fstDB')
   is_list = testList(x)
   is_DT = testDataTable(x)
@@ -53,10 +53,14 @@ write_fstDB = function(x, name='fstDB', sub='sub', sub_col='.list_position',
         breaks = seq(break_range[1], break_range[2], len=breaks + 1L)
       }
       if(trim){
-        x = x[!is.na(col_data)]
+        if(anyNA(col_data)){
+          x = x[!is.na(col_data),]
+        }
         x = x[col_data >= breaks[1] & col_data <= breaks[length(breaks)],]
       }else{
-        col_data[is.na(col_data)] = breaks[length(breaks)]
+        if(anyNA(col_data)){
+          col_data[is.na(col_data)] = breaks[length(breaks)]
+        }
       }
       sub_vec = findInterval(col_data, breaks, all.inside=TRUE)
       sub_vec_unique = sort(unique(sub_vec))
