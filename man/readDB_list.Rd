@@ -26,14 +26,14 @@ Scalar character; regular expression to filter \option{filelist} by. The default
 Logical; if using \option{dirlist} should all sub-directories be checked recursively?
 }
   \item{combine}{
-Logical; should the targetted fst files be immediately combined on read in, creating a \code{data.table} output (rather than \code{fstDB}).
+Logical; should the targetted fst files be immediately combined on read in, creating a \code{data.table} output rather than \code{fstDB} object.
 }
 }
 \details{
 This function is usually used in combination with \code{fstDB} methods to efficiently operate on large volumes of data held in an on-disk mini database. The real strength of this method is the \code{fst} backend, which is a threaded and highly optimised method to work on random access on disk files.
 }
 \value{
-In the default mode of \option{combine} = FALSE the output is an \code{fstDB} which has an associated '[' subset method to allow data.table like operations.
+In the default mode of \option{combine} = FALSE the output is a \code{fstDB} object which has an associated '[' subset method to allow data.table like operations.
 
 \option{combine} = TRUE then the output will be a fully joined \code{data.table}.
 }
