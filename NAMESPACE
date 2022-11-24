@@ -1,0 +1,14 @@
+export(read_fstDB)
+export(write_fstDB)
+
+export(`[.fstDB`)
+S3method("[", fstDB)
+
+export(dim.fstDB)
+S3method("dim", fstDB)
+
+import("checkmate")
+import("foreach")
+import("doParallel")
+import("fst")
+import("data.table")
