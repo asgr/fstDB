@@ -1,5 +1,7 @@
 export(read_fstDB)
 export(write_fstDB)
+export(limits_fstDB)
+export(check_limits_fstDB)
 
 export(`[.fstDB`)
 S3method("[", fstDB)
@@ -9,6 +11,8 @@ S3method("dim", fstDB)
 
 import("checkmate")
 import("foreach")
-import("doParallel")
 import("fst")
 import("data.table")
+
+importFrom("doParallel", "registerDoParallel")
+importFrom("parallel", "detectCores")

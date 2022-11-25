@@ -1,4 +1,5 @@
 \name{read_fstDB}
+\alias{fstDB}
 \alias{read_fstDB}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
@@ -44,13 +45,18 @@ Aaron Robotham
 \code{\link{write_fstDB}}, \code{\link{fstDB_methods}}
 }
 \examples{
-\dontrun{
+library(data.table)
+
 temp = list(data.table(num=1:13, let=letters[1:13]),
             data.table(num=14:26, let=letters[14:26]))
 
-write_fstDB(temp, name='~/Documents/test_fstDB')
+fstDB = tempfile()
+dir.create(fstDB)
+on.exit(unlink(fstDB))
 
-temp2 = read_fstDB('~/Documents/test_fstDB')
+write_fstDB(temp, name=fstDB)
+
+temp2 = read_fstDB(fstDB)
 
 print(temp2)
 
@@ -60,23 +66,33 @@ print(temp2['num < 14',])
 
 #We can write out a data.table using a target column to organise the files:
 
-tempDT = temp2[,] #this loads all the fstDB into a single data.table
+temp_DT = temp2[,] #this loads all the fstDB into a single data.table
 
-write_fstDB(tempDT, name='~/Documents/test_fstDB2', breakby='num', breaks=4)
+fstDB2 = tempfile()
+dir.create(fstDB2)
+on.exit(unlink(fstDB2))
 
-temp3 = read_fstDB('~/Documents/test_fstDB2')
+write_fstDB(temp_DT, name=fstDB2, breakby='num', breaks=4)
+
+temp3 = read_fstDB(fstDB2)
 
 print(temp3)
 
-print(temp3['num < 14',]) #this should be the same, but operating on 4 files (not 2):
+#Note we have to set cores=2 because that is the CRAN max allowed
+
+print(temp3['num < 14',cores=2]) #should be the same, but operating on 4 files (not 2)
+
+#We can check which files of the temp3 fstDB contained the selected rows:
+
+attributes(temp3['num < 14',cores=2])$.log_sub #just 1 and 2
+
+#knowing this we can search just those files:
+
+print(temp3['num < 14',limit_sub=c(1,2),cores=2])
+
+#if we specified files 1 and 3 we would miss some rows:
+
+print(temp3['num < 14',limit_sub=c(1,3),cores=2])
+
+#so users need to be careful if using this feature, but it can lead to large speed ups
 }
-}
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory (show via RShowDoc("KEYWORDS")):
-% \keyword{ ~kwd1 }
-% \keyword{ ~kwd2 }
-% Use only one keyword per line.
-% For non-standard keywords, use \concept instead of \keyword:
-% \concept{ ~cpt1 }
-% \concept{ ~cpt2 }
-% Use only one concept per line.

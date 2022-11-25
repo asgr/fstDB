@@ -25,7 +25,7 @@ read_fstDB = function(dirlist=".", filelist=NULL, pattern="^.*sub.*\\.fst$",
   }
 }
 
-write_fstDB = function(x, name='example_fstDB', sub='sub', sub_col='.list_position',
+write_fstDB = function(x, name='example_fstDB', sub='sub', sub_col='.log_sub',
                        compress=50, uniform_encoding=TRUE, cores=1, append=FALSE,
                        breakby=NULL, breaks=10, trim=FALSE){
   is_fstDB = testClass(x, 'fstDB')
@@ -56,10 +56,10 @@ write_fstDB = function(x, name='example_fstDB', sub='sub', sub_col='.list_positi
         if(anyNA(col_data)){
           x = x[!is.na(col_data),]
         }
-        x = x[col_data >= breaks[1] & col_data <= breaks[length(breaks)],]
+        x = x[col_data >= breaks[1] & col_data <= max(breaks, na.rm=TRUE),]
       }else{
         if(anyNA(col_data)){
-          col_data[is.na(col_data)] = breaks[length(breaks)]
+          col_data[is.na(col_data)] = max(breaks, na.rm=TRUE)
         }
       }
       sub_vec = findInterval(col_data, breaks, all.inside=TRUE)
@@ -118,45 +118,4 @@ write_fstDB = function(x, name='example_fstDB', sub='sub', sub_col='.list_positi
       }
     }
   }
-}
-
-`[.fstDB` = function(x, i, j){
-  m = NULL
-  .list_position = NULL
-  output = foreach(m = 1:length(x))%do%{
-    if(missing(i) & missing(j)){
-      tempDT = as.data.table(x[[m]][,,drop=FALSE])
-    }else if(missing(i) & !missing(j)){
-      tempDT = as.data.table(x[[m]][,j,drop=FALSE])
-    }else if(!missing(i) & missing(j)){
-      if(is.character(i)){
-        i = parse(text=i)
-      }
-      tempDT = as.data.table(x[[m]][,,drop=FALSE])
-      tempDT = tempDT[eval(i),,drop=FALSE]
-    }else if(!missing(i) & !missing(j)){
-      if(is.character(i)){
-        i = parse(text=i)
-      }
-      tempDT = as.data.table(x[[m]][,j,drop=FALSE])
-      tempDT = tempDT[eval(i),,drop=FALSE]
-    }
-
-    tempDT[,.list_position:=m]
-
-    return(tempDT)
-  }
-
-  output = rbindlist(output)
-
-  attributes(output)$.list_position = output$.list_position
-  output$.list_position = NULL
-  return(output)
-}
-
-dim.fstDB = function(x){
-  colN = dim(x[[1]])[2]
-  i = NULL
-  rowN = foreach(i = 1:length(x), .combine='sum')%do%{dim(x[[i]])[1]}
-  return(c(rowN, colN))
 }

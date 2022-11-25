@@ -1,12 +1,13 @@
 Package: fstDB
 Type: Package
 Title: FST Database Package
-Version: 0.1.0
+Version: 0.3.0
+Date: 2022-11-25
 Author: person(given='Aaron', family='Robotham', email='aaron.robotham@uwa.edu.au',
         role=c('aut', 'cre'), comment=c(ORCID='0000-0003-0429-3579'))
 Maintainer: Aaron Robotham <aaron.robotham@uwa.edu.au>
 Description: Create and operate on mini on-disk FST databases.
 License: LGPL-3
-Imports: fst, foreach, doParallel, checkmate, data.table
+Imports: fst, foreach, doParallel, checkmate, data.table, parallel
 Encoding: UTF-8
 LazyData: true
