@@ -78,7 +78,7 @@ print(temp2)
 
 #you can do data.table like logic on i (but must be character of an expression):
 
-print(temp2['num < 14',])
+print(temp2['num < 18',])
 
 #We can write out a data.table using a target column to organise the files:
 
@@ -96,19 +96,19 @@ print(temp3)
 
 #Note we have to set cores=2 because that is the CRAN max allowed
 
-print(temp3['num < 14',cores=2]) #should be the same, but operating on 4 files (not 2)
+print(temp3['num < 18',cores=2]) #should be the same, but operating on 4 files (not 2)
 
 #We can check which files of the temp3 fstDB contained the selected rows:
 
-attributes(temp3['num < 14',cores=2])$.log_sub #just 1 and 2
+attributes(temp3['num < 18',cores=2])$.log_sub #just 1 and 2
 
 #knowing this we can search just those files:
 
-print(temp3['num < 14',limit_sub=c(1,2),cores=2])
+print(temp3['num < 18',limit_sub=c(1,2),cores=2])
 
 #if we specified files 1 and 3 we would miss some rows:
 
-print(temp3['num < 14',limit_sub=c(1,3),cores=2])
+print(temp3['num < 18',limit_sub=c(1,3),cores=2])
 
 #so users need to be careful if using this feature, but it can lead to large speed ups
 }

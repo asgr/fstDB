@@ -1,5 +1,7 @@
 `[.fstDB` = function(x, i, j, j_logic='auto', limit_sub=NULL, cores=length(x), log_sub=TRUE){
 
+  start_time = proc.time()[3]
+
   has_i = !missing(i)
   has_j = !missing(j)
 
@@ -77,6 +79,12 @@
     attributes(output)$.log_sub = output$.log_sub
     output$.log_sub = NULL
   }
+
+  if(has_i){
+    attributes(output)$.log_i = as.character(i)
+  }
+
+  attributes(output)$.time = proc.time()[3] - start_time
 
   return(output)
 }

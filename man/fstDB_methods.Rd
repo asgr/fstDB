@@ -36,14 +36,14 @@ Integer vector; users can specify which elements of \option{x} to search over. I
 Integer scalar; the number of cores to run on. The default is the number elements in the \option{x} fstDB. Internally the number of cores is capped to the number available on the machine. Also, it will be capped to the number elements in the \option{x} fstDB (if you explicitly request more).
 }
   \item{log_sub}{
-Logical; should an attribute be added to the output specifying the origin of the row (i.e. which fstDB element it came from)? This might be useful for setting \option{limit_sub} in future searches. See Examples.
+Logical; should an attribute be added to the output specifying the origin of the row (i.e. which fstDB element it came from)? This might be useful for setting \option{limit_sub} in future searches. This will be named ".log_sub". See Examples.
 }
 }
 \details{
 These methods offer efficient and intuitive ways to interact with a target \code{fstDB} mini on-disk database.
 }
 \value{
-\code{[.fstDB} the combined \code{data.table}.
+\code{[.fstDB} the combined \code{data.table}. If \option{log_sub} then will have attribute ".log_sub". If \option{i} is provided it will have attribute "log_i" which will be the character representation of \option{i} (i.e. the logical operation requested). Will also have attribute ".time" which provides the computation time taken for the whole operation (in human time elapsed, not CPU time).
 
 \code{dim.fstDB} integer dimension vector (N row, N col).
 }
@@ -72,7 +72,7 @@ print(temp2)
 
 #you can do data.table like logic on i (but must be character of an expression):
 
-print(temp2['num < 14',])
+print(temp2['num < 18',])
 
 #We can write out a data.table using a target column to organise the files:
 
@@ -90,19 +90,19 @@ print(temp3)
 
 #Note we have to set cores=2 because that is the CRAN max allowed
 
-print(temp3['num < 14',cores=2]) #should be the same, but operating on 4 files (not 2)
+print(temp3['num < 18',cores=2]) #should be the same, but operating on 4 files (not 2)
 
 #We can check which files of the temp3 fstDB contained the selected rows:
 
-attributes(temp3['num < 14',cores=2])$.log_sub #just 1 and 2
+attributes(temp3['num < 18',cores=2])$.log_sub #just 1 and 2
 
 #knowing this we can search just those files:
 
-print(temp3['num < 14',limit_sub=c(1,2),cores=2])
+print(temp3['num < 18',limit_sub=c(1,2),cores=2])
 
 #if we specified files 1 and 3 we would miss some rows:
 
-print(temp3['num < 14',limit_sub=c(1,3),cores=2])
+print(temp3['num < 18',limit_sub=c(1,3),cores=2])
 
 #so users need to be careful if using this feature, but it can lead to large speed ups
 }
